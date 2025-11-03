@@ -1,0 +1,14 @@
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\bin\Debug\net8.0\WebServer.exe
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\bin\Debug\net8.0\WebServer.deps.json
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\bin\Debug\net8.0\WebServer.runtimeconfig.json
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\bin\Debug\net8.0\WebServer.dll
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\bin\Debug\net8.0\WebServer.pdb
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.AssemblyInfoInputs.cache
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.AssemblyInfo.cs
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.csproj.CoreCompileInputs.cache
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.dll
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\refint\WebServer.dll
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.pdb
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.genruntimeconfig.cache
+C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\ref\WebServer.dll

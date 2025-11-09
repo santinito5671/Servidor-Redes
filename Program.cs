@@ -2,8 +2,8 @@
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.IO.Compression;
 
-// Crear directorios necesarios al inicio
 Directory.CreateDirectory("Config");
 Directory.CreateDirectory("StaticFiles");
 Directory.CreateDirectory("Logs");
@@ -13,10 +13,8 @@ Console.WriteLine(" Directorio actual: " + Directory.GetCurrentDirectory());
 
 ServerConfig _config = new();
 
-// Cargar configuración
 LoadConfiguration();
 
-// Iniciar servidor
 await StartServer();
 
 void LoadConfiguration()
@@ -57,7 +55,7 @@ async Task StartServer()
         Console.WriteLine($" Servidor escuchando en puerto {_config.Port}");
         Console.WriteLine($" URL: http://localhost:{_config.Port}");
         Console.WriteLine($" Sirviendo archivos desde: {Path.GetFullPath(_config.DocumentRoot)}");
-        Console.WriteLine("  Presiona Ctrl+C para detener el servidor");
+        Console.WriteLine("  Presiona Ctrl+C para detener el servidor");
         Console.WriteLine("=".PadRight(50, '='));
         
         while (true)
@@ -79,6 +77,10 @@ async Task HandleClient(TcpClient client)
     var clientIp = clientEndPoint?.Address.ToString() ?? "desconocido";
     var clientId = Guid.NewGuid().ToString()[..6];
     
+    string? acceptedEncoding = null;
+    string path = "UNKNOWN";
+    string fullPath = "UNKNOWN";
+    
     try
     {
         using (client)
@@ -93,7 +95,7 @@ async Task HandleClient(TcpClient client)
                 return;
             }
             
-            // Parsear método y ruta
+            // Parsear método y ruta completa
             var requestParts = requestLine.Split(' ');
             if (requestParts.Length < 2)
             {
@@ -102,12 +104,25 @@ async Task HandleClient(TcpClient client)
             }
             
             var method = requestParts[0];
-            var path = requestParts[1];
+            fullPath = requestParts[1]; // Captura /ruta?param=valor
             
-            Console.WriteLine($" Cliente {clientId}: {method} {path}");
+            // Separar la ruta base de los parámetros de consulta
+            var pathAndQuery = fullPath.Split('?', 2);
+            path = pathAndQuery[0]; // La ruta sin parámetros, e.g., /index.html
+            var queryString = pathAndQuery.Length > 1 ? pathAndQuery[1] : null; // Los parámetros, e.g., key=value
+
+            Console.WriteLine($" Cliente {clientId}: {method} {fullPath}");
             
+            // Loguear los parámetros de consulta
+            if (!string.IsNullOrEmpty(queryString))
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($" 📝 Cliente {clientId}: Parámetros de consulta logueados: {queryString}");
+                Console.ResetColor();
+            }
+
             // Leer headers
-            var headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             string? headerLine;
             while (!string.IsNullOrEmpty(headerLine = await reader.ReadLineAsync()))
             {
@@ -117,6 +132,12 @@ async Task HandleClient(TcpClient client)
                     var key = headerLine[..separatorIndex].Trim();
                     var value = headerLine[(separatorIndex + 1)..].Trim();
                     headers[key] = value;
+                    
+                    // Capturar el header Accept-Encoding
+                    if (key.Equals("Accept-Encoding", StringComparison.OrdinalIgnoreCase))
+                    {
+                        acceptedEncoding = value;
+                    }
                 }
             }
             
@@ -124,56 +145,64 @@ async Task HandleClient(TcpClient client)
             string body = "";
             if (method == "POST" && headers.ContainsKey("Content-Length"))
             {
-                var contentLength = int.Parse(headers["Content-Length"]);
-                var buffer = new char[contentLength];
-                await reader.ReadBlockAsync(buffer, 0, contentLength);
-                body = new string(buffer);
+                if (int.TryParse(headers["Content-Length"], out var contentLength))
+                {
+                    var buffer = new char[contentLength];
+                    // Asegurar que solo leemos el número exacto de bytes del body
+                    await reader.ReadBlockAsync(buffer, 0, contentLength); 
+                    body = new string(buffer);
+                }
             }
             
             // Log de la solicitud
-            LogRequest(clientIp, method, path, "200");
+            LogRequest(clientIp, method, fullPath, "200");
             
             // Manejar la solicitud
-            await HandleRequest(stream, method, path, body, clientId);
+            await HandleRequest(stream, method, path, body, clientId, acceptedEncoding);
         }
     }
     catch (Exception ex)
     {
         Console.WriteLine($" Error con cliente {clientId}: {ex.Message}");
-        LogRequest(clientIp, "UNKNOWN", "ERROR", "500");
+        LogRequest(clientIp, "UNKNOWN", fullPath, "500");
     }
     
     Console.WriteLine($" Cliente {clientId} desconectado");
 }
 
-async Task HandleRequest(NetworkStream stream, string method, string path, string body, string clientId)
+async Task HandleRequest(NetworkStream stream, string method, string path, string body, string clientId, string? acceptedEncoding)
 {
     try
     {
-        // Servir archivos estáticos para GET
+        
         if (method == "GET")
         {
-            await ServeStaticFile(stream, path, clientId);
+            // El requisito de GET
+            await ServeStaticFile(stream, path, clientId, acceptedEncoding);
         }
         else if (method == "POST")
         {
-            // Loggear datos POST
-            Console.WriteLine($" Cliente {clientId}: POST Data: {body}");
-            await SendTextResponse(stream, "200 OK", "text/plain", "Datos recibidos y logueados");
+            // Loguear datos recibidos
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" 📦 Cliente {clientId}: DATOS POST RECIBIDOS Y LOGUEADOS:\n{body}");
+            Console.ResetColor();
+            
+            await SendTextResponse(stream, "200 OK", "text/plain", "Datos POST recibidos y logueados correctamente.", acceptedEncoding);
         }
+        // Otros Métodos
         else
         {
-            await SendTextResponse(stream, "405 Method Not Allowed", "text/plain", "Método no permitido");
+            await SendTextResponse(stream, "405 Method Not Allowed", "text/plain", "Método no permitido", acceptedEncoding);
         }
     }
     catch (Exception ex)
     {
         Console.WriteLine($" Error manejando request {clientId}: {ex.Message}");
-        await SendTextResponse(stream, "500 Internal Server Error", "text/plain", "Error interno del servidor");
+        await SendTextResponse(stream, "500 Internal Server Error", "text/plain", "Error interno del servidor", acceptedEncoding);
     }
 }
 
-async Task ServeStaticFile(NetworkStream stream, string path, string clientId)
+async Task ServeStaticFile(NetworkStream stream, string path, string clientId, string? acceptedEncoding)
 {
     // Si la ruta es "/", servir index.html
     if (path == "/")
@@ -191,7 +220,7 @@ async Task ServeStaticFile(NetworkStream stream, string path, string clientId)
         var contentType = GetContentType(filePath);
         
         Console.WriteLine($" Cliente {clientId}: Sirviendo {path} ({content.Length} bytes)");
-        await SendBinaryResponse(stream, "200 OK", contentType, content);
+        await SendBinaryResponse(stream, "200 OK", contentType, content, acceptedEncoding);
     }
     else
     {
@@ -200,24 +229,45 @@ async Task ServeStaticFile(NetworkStream stream, string path, string clientId)
     }
 }
 
-async Task SendTextResponse(NetworkStream stream, string status, string contentType, string content)
+async Task SendTextResponse(NetworkStream stream, string status, string contentType, string content, string? acceptedEncoding)
 {
     var bytes = Encoding.UTF8.GetBytes(content);
-    await SendBinaryResponse(stream, status, contentType, bytes);
+    await SendBinaryResponse(stream, status, contentType, bytes, acceptedEncoding);
 }
 
-async Task SendBinaryResponse(NetworkStream stream, string status, string contentType, byte[] content)
+async Task SendBinaryResponse(NetworkStream stream, string status, string contentType, byte[] content, string? acceptedEncoding)
 {
+    string? chosenEncoding = null;
+    byte[] responseContent = content;
+
+    // Se comprime si el contenido es > 1KB
+    if (content.Length > 1024 && acceptedEncoding != null && (contentType.Contains("text") || contentType.Contains("javascript")))
+    {
+        if (acceptedEncoding.Contains("gzip", StringComparison.OrdinalIgnoreCase))
+        {
+            responseContent = CompressGzip(content);
+            chosenEncoding = "gzip";
+            Console.WriteLine($" [Compresión Gzip aplicada. Original: {content.Length} bytes, Comprimido: {responseContent.Length} bytes]");
+        }
+    }
+
     var response = new StringBuilder();
     response.AppendLine($"HTTP/1.1 {status}");
     response.AppendLine($"Content-Type: {contentType}");
-    response.AppendLine($"Content-Length: {content.Length}");
+    response.AppendLine($"Content-Length: {responseContent.Length}");
+
+    // Añadir Content-Encoding si se aplicó compresión
+    if (chosenEncoding != null)
+    {
+        response.AppendLine($"Content-Encoding: {chosenEncoding}");
+    }
+    
     response.AppendLine("Connection: close");
     response.AppendLine();
     
     var headerBytes = Encoding.UTF8.GetBytes(response.ToString());
     await stream.WriteAsync(headerBytes, 0, headerBytes.Length);
-    await stream.WriteAsync(content, 0, content.Length);
+    await stream.WriteAsync(responseContent, 0, responseContent.Length);
 }
 
 async Task Send404Response(NetworkStream stream)
@@ -239,8 +289,20 @@ async Task Send404Response(NetworkStream stream)
         </html>
         """;
     
-    await SendTextResponse(stream, "404 Not Found", "text/html", notFoundHtml);
+    await SendTextResponse(stream, "404 Not Found", "text/html", notFoundHtml, null); 
 }
+
+// MÉTODO DE COMPRESIÓN
+byte[] CompressGzip(byte[] content)
+{
+    using var output = new MemoryStream();
+    using (var compressionStream = new GZipStream(output, CompressionMode.Compress, true))
+    {
+        compressionStream.Write(content, 0, content.Length);
+    }
+    return output.ToArray();
+}
+
 
 string GetContentType(string filePath)
 {

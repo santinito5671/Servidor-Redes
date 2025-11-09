@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\santi\\Documents\\proyectos\\programacion sobre redes\\webserver\\WebServer\\WebServer.csproj": {}
+    "C:\\Users\\ordo2\\Downloads\\Servidor-Redes-master\\Servidor-Redes-master\\WebServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\santi\\Documents\\proyectos\\programacion sobre redes\\webserver\\WebServer\\WebServer.csproj": {
+    "C:\\Users\\ordo2\\Downloads\\Servidor-Redes-master\\Servidor-Redes-master\\WebServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\santi\\Documents\\proyectos\\programacion sobre redes\\webserver\\WebServer\\WebServer.csproj",
+        "projectUniqueName": "C:\\Users\\ordo2\\Downloads\\Servidor-Redes-master\\Servidor-Redes-master\\WebServer.csproj",
         "projectName": "WebServer",
-        "projectPath": "C:\\Users\\santi\\Documents\\proyectos\\programacion sobre redes\\webserver\\WebServer\\WebServer.csproj",
-        "packagesPath": "C:\\Users\\santi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\santi\\Documents\\proyectos\\programacion sobre redes\\webserver\\WebServer\\obj\\",
+        "projectPath": "C:\\Users\\ordo2\\Downloads\\Servidor-Redes-master\\Servidor-Redes-master\\WebServer.csproj",
+        "packagesPath": "C:\\Users\\ordo2\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ordo2\\Downloads\\Servidor-Redes-master\\Servidor-Redes-master\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\santi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\ordo2\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -12,3 +12,17 @@ C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\
 C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.pdb
 C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\WebServer.genruntimeconfig.cache
 C:\Users\santi\Documents\proyectos\programacion sobre redes\webserver\WebServer\obj\Debug\net8.0\ref\WebServer.dll
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\bin\Debug\net8.0\WebServer.exe
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\bin\Debug\net8.0\WebServer.deps.json
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\bin\Debug\net8.0\WebServer.runtimeconfig.json
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\bin\Debug\net8.0\WebServer.dll
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\bin\Debug\net8.0\WebServer.pdb
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.AssemblyInfoInputs.cache
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.AssemblyInfo.cs
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.csproj.CoreCompileInputs.cache
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.dll
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\refint\WebServer.dll
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.pdb
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\WebServer.genruntimeconfig.cache
+C:\Users\ordo2\Downloads\Servidor-Redes-master\Servidor-Redes-master\obj\Debug\net8.0\ref\WebServer.dll
